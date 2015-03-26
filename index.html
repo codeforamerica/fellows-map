@@ -8,7 +8,7 @@
 <script type="text/javascript" src="fellows_data.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.Default.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.css">
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster.js"></script>
+<script type="text/javascript" src="cluster.js"></script>
     <style>
     body {
       background-color: Fuchsia;
@@ -21,6 +21,16 @@
   height:100%;
   background-color:#c0c0c0; /* just to ensure the element is there */
 }
+.cluster {
+  padding: 20px ;
+  text-align: center;
+  background-color: gold;
+  border-radius: 50%;
+
+}
+.cluster:hover {
+  border: 2px solid red;
+}
     </style>
  
 </head>
@@ -32,12 +42,36 @@
         var map = L.map('map').setView([47.65, -122.4], 11);
 
         //Add a basemap
-        L.tileLayer('http://{s}.tiles.mapbox.com/v3/spatialdev.map-c9z2cyef/{z}/{x}/{y}.png').addTo(map); 
-        var geoJson= L.geoJson(fellowsdata);
-        		var markers = L.markerClusterGroup();
+        L.tileLayer('http://{s}.tiles.mapbox.com/v3/svmatthews.lidab7g5/{z}/{x}/{y}.png').addTo(map); 
+        var geoJson= L.geoJson(fellowsdata, {
+          onEachFeature: thursday
+        });
+        function thursday(feature,layer){
+          console.log(feature);
+            var info = feature.properties;
+
+            var popupContent = "<h1>"+info.Name+"</h1>";
+            popupContent += info["Fellowship City"] + "<br>";
+            popupContent += info["Fellowship Year"] + "<br>";
+            popupContent += info.Skill + "<br>";
+            popupContent += "<img src='http://www.codeforamerica.org/media/images/people/" + info.image + "'>";
+            if (info && info.Name) {
+                layer.bindPopup(popupContent);
+            }
+
+        }
+        		var markers = L.markerClusterGroup({
+              iconCreateFunction: function(cluster) {
+                return new L.DivIcon({
+                  html: "<span class='cluster'>"+cluster.getChildCount()+"</span>",
+                  iconAnchor: L.point(22,22)
+                })
+              },
+              showCoverageOnHover: false
+            });
         		markers.addLayer(geoJson);
         		map.addLayer(markers);
-        		// map.fitBounds(markers.getBounds());
+        		map.fitBounds(markers.getBounds());
 </script>
 </body>
 </html>
