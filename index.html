@@ -8,29 +8,70 @@
 <script type="text/javascript" src="fellows_data.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.Default.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.css">
+<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700' rel='stylesheet' type='text/css'>
 <script type="text/javascript" src="cluster.js"></script>
     <style>
     body {
       background-color: Fuchsia;
       margin: 0;
       padding: 0;
+      font-family: 'Source Sans Pro', sans-serif;
     }
     #map {
     	position: absolute;
-  width:100%;
-  height:100%;
-  background-color:#c0c0c0; /* just to ensure the element is there */
-}
-.cluster {
-  padding: 20px ;
-  text-align: center;
-  background-color: gold;
-  border-radius: 50%;
+      width:100%;
+      height:100%;
+      background-color:#c0c0c0; /* just to ensure the element is there */
+    }
+    .cluster {
+      text-align: center;
+      background-color: gold;
+      border-radius: 50%;
+      position:relative; /* important for the .outer div */
+      width:50px;
+      height:50px;
+      margin:0;
+      -webkit-box-sizing: border-box;
+         -moz-box-sizing: border-box;
+              box-sizing: border-box;
+    }
+    .cluster:hover {
+      border: 2px solid #cf1b41;
+    }
+    .cluster-outer {
+      display: table;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+    .cluster-inner {
+      display: table-cell;
+      vertical-align: middle;
+    }
+    .leaflet-popup-content-wrapper {
+      border:5px solid #cf1b41;
+      width:250px;
+    }
+    .leaflet-popup-tip {
+      background:#cf1b41;
+    }
+    .leaflet-popup-content {
+      font-family: 'Source Sans Pro', sans-serif;
+      padding:10px;
+      margin:0;
+      -webkit-box-sizing: border-box;
+         -moz-box-sizing: border-box;
+              box-sizing: border-box;
+    }
+    .leaflet-popup-content h1 {
+      margin:0;
+    }
+    .leaflet-popup-content img {
+      display: block;
+      margin-top:10px;
+      width:100%;
+    }
 
-}
-.cluster:hover {
-  border: 2px solid red;
-}
     </style>
  
 </head>
@@ -39,39 +80,39 @@
 	<div id="map"></div>
 <script>
   //initialize the map
-        var map = L.map('map').setView([47.65, -122.4], 11);
+  var map = L.map('map').setView([47.65, -122.4], 11);
 
-        //Add a basemap
-        L.tileLayer('http://{s}.tiles.mapbox.com/v3/svmatthews.lidab7g5/{z}/{x}/{y}.png').addTo(map); 
-        var geoJson= L.geoJson(fellowsdata, {
-          onEachFeature: thursday
-        });
-        function thursday(feature,layer){
-          console.log(feature);
-            var info = feature.properties;
+  //Add a basemap
+  L.tileLayer('http://{s}.tiles.mapbox.com/v3/svmatthews.lidab7g5/{z}/{x}/{y}.png').addTo(map); 
+  var geoJson= L.geoJson(fellowsdata, {
+    onEachFeature: thursday
+  });
+  function thursday(feature,layer){
+    console.log(feature);
+      var info = feature.properties;
 
-            var popupContent = "<h1>"+info.Name+"</h1>";
-            popupContent += info["Fellowship City"] + "<br>";
-            popupContent += info["Fellowship Year"] + "<br>";
-            popupContent += info.Skill + "<br>";
-            popupContent += "<img src='http://www.codeforamerica.org/media/images/people/" + info.image + "'>";
-            if (info && info.Name) {
-                layer.bindPopup(popupContent);
-            }
+      var popupContent = "<h1>"+info.Name+"</h1>";
+      popupContent += "<strong>Fellowship City: </strong> " + info["Fellowship City"] + ", " + info["Fellowship Year"] + "<br>";
+      popupContent += "<strong>Skill: </strong>" + info.Skill + "<br>";
+      popupContent += "<img src='http://www.codeforamerica.org/media/images/people/" + info.image + "'>";
+      if (info && info.Name) {
+          layer.bindPopup(popupContent);
+      }
 
-        }
-        		var markers = L.markerClusterGroup({
-              iconCreateFunction: function(cluster) {
-                return new L.DivIcon({
-                  html: "<span class='cluster'>"+cluster.getChildCount()+"</span>",
-                  iconAnchor: L.point(22,22)
-                })
-              },
-              showCoverageOnHover: false
-            });
-        		markers.addLayer(geoJson);
-        		map.addLayer(markers);
-        		map.fitBounds(markers.getBounds());
+  }
+	var markers = L.markerClusterGroup({
+    iconCreateFunction: function(cluster) {
+      return new L.DivIcon({
+        className: 'cluster-wrapper',
+        html: "<div class='cluster'><div class='cluster-outer'><div class='cluster-inner'>"+cluster.getChildCount()+"</div></div></div>",
+        iconAnchor: L.point(22,22)
+      })
+    },
+    showCoverageOnHover: false
+  });
+	markers.addLayer(geoJson);
+	map.addLayer(markers);
+	map.fitBounds(markers.getBounds());
 </script>
 </body>
 </html>
