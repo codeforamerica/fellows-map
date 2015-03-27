@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.Default.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.css">
 <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="tabletop.js"></script>
 <script type="text/javascript" src="cluster.js"></script>
     <style>
     .cf:before,
@@ -34,6 +35,7 @@
       height:100%;
       background-color:#c0c0c0; /* just to ensure the element is there */
     }
+    .cluster-wrapper {}
     .cluster {
       text-align: center;
       background-color: #399fd3;
@@ -45,6 +47,11 @@
       -webkit-box-sizing: border-box;
          -moz-box-sizing: border-box;
               box-sizing: border-box;
+      -webkit-transition: .2s;
+         -moz-transition: .2s;
+          -ms-transition: .2s;
+           -o-transition: .2s;
+              transition: .2s;
     }
     .cluster:hover {
       border: 2px solid #cf1b41;
@@ -110,24 +117,82 @@
 <body>
 	<div id="map"></div>
 <script>
+  window.onload = init();
   //initialize the map
-  var map = L.map('map').setView([47.65, -122.4], 11);
+  var map = L.map('map').setView([34.30714385628804, -112.0166015625], 4);
+  var fellowsData = {
+    "type": "FeatureCollection",
+    "features": []
+  };
+  L.tileLayer('http://{s}.tiles.mapbox.com/v3/svmatthews.lidab7g5/{z}/{x}/{y}.png').addTo(map);
 
-  //Add a basemap
-  L.tileLayer('http://{s}.tiles.mapbox.com/v3/svmatthews.lidab7g5/{z}/{x}/{y}.png').addTo(map); 
-  
-  // create geojson feature, but don't add to map
-  var geoJson = L.geoJson(fellowsdata, {
-    onEachFeature: onEachFeature,
-    pointToLayer: function (feature, latlng) {
-      return L.marker(latlng, {
-        icon: L.divIcon({
-          className: 'fellow-marker cf',
-          html: '<img class="fellow-marker-image" src="http://www.codeforamerica.org/media/images/people/'+feature.properties.image+'"><span class="fellow-marker-name">'+feature.properties.Name+'</span>'
-        })
-      })
+
+  function init() {
+    Tabletop.init({
+      key: '1yFx14zL13sz1UXOhY8MVZSzWWG-tvEdcFVe2CaEs-sQ',
+      callback: map,
+      simpleSheet: true
+    });
+  }
+
+  function map(data, tabletop) {
+    for (var i = 0; i < data.length; i++) {
+      (function(row) {
+        if (row.Lat) {
+          var f = makeGeoJsonFeature(row);
+          fellowsData.features.push(f);
+        }
+      })(data[i]);
     }
-  });
+
+    geoJson = L.geoJson(fellowsData, {
+      onEachFeature: onEachFeature,
+      pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, {
+          icon: L.divIcon({
+            className: 'fellow-marker cf',
+            html: '<img class="fellow-marker-image" src="http://www.codeforamerica.org/media/images/people/'+feature.properties.image+'"><span class="fellow-marker-name">'+feature.properties.Name+'</span>'
+          })
+        })
+      }
+    });
+
+    // add the geojson object to the markers group
+    markers.addLayer(geoJson);
+
+    // add the markers to the map now that they are clustered
+    map.addLayer(markers);
+
+    // fit the map to the bounds of the markers
+    map.fitBounds(markers.getBounds());
+  }
+
+  function makeGeoJsonFeature(feature) {
+    var newFeature = {
+      "type": "Feature",
+      "properties": {
+        "image": feature.image,
+        "Fellowship City": feature['Fellowship City'],
+        "State": feature.State,
+        "First Name": feature['First Name'],
+        "Last Name": feature['Last Name'],
+        "Name": feature['Name'],
+        "Skill": feature.Skill,
+        "": "",
+        "Fellowship Year": feature['Fellowship Year']
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          feature.Lng,
+          feature.Lat
+        ]
+      }
+    };
+
+    return newFeature;
+  }
+  
 
   // do this on every single marker/fellow
   function onEachFeature (feature, layer) {
@@ -156,15 +221,6 @@
     showCoverageOnHover: false,
     spiderfyLinear: true
   });
-
-  // add the geojson object to the markers group
-	markers.addLayer(geoJson);
-
-  // add the markers to the map now that they are clustered
-	map.addLayer(markers);
-
-  // fit the map to the bounds of the markers
-	map.fitBounds(markers.getBounds());
 </script>
 </body>
 </html>
