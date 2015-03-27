@@ -1,0 +1,167 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'install', '-g', 'csv2geojson' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.33
+4 verbose cache add [ 'csv2geojson', null ]
+5 verbose cache add name=undefined spec="csv2geojson" args=["csv2geojson",null]
+6 verbose parsed url { protocol: null,
+6 verbose parsed url   slashes: null,
+6 verbose parsed url   auth: null,
+6 verbose parsed url   host: null,
+6 verbose parsed url   port: null,
+6 verbose parsed url   hostname: null,
+6 verbose parsed url   hash: null,
+6 verbose parsed url   search: null,
+6 verbose parsed url   query: null,
+6 verbose parsed url   pathname: 'csv2geojson',
+6 verbose parsed url   path: 'csv2geojson',
+6 verbose parsed url   href: 'csv2geojson' }
+7 silly lockFile f5f9b977-csv2geojson csv2geojson
+8 verbose lock csv2geojson /Users/mapsam/.npm/f5f9b977-csv2geojson.lock
+9 silly lockFile f5f9b977-csv2geojson csv2geojson
+10 silly lockFile f5f9b977-csv2geojson csv2geojson
+11 verbose addNamed [ 'csv2geojson', '' ]
+12 verbose addNamed [ null, '*' ]
+13 silly lockFile 19118c75-csv2geojson csv2geojson@
+14 verbose lock csv2geojson@ /Users/mapsam/.npm/19118c75-csv2geojson.lock
+15 silly addNameRange { name: 'csv2geojson', range: '*', hasData: false }
+16 verbose request where is /csv2geojson
+17 verbose request registry https://registry.npmjs.org/
+18 verbose request id 1f697dc05fe65d9a
+19 verbose url raw /csv2geojson
+20 verbose url resolving [ 'https://registry.npmjs.org/', './csv2geojson' ]
+21 verbose url resolved https://registry.npmjs.org/csv2geojson
+22 verbose request where is https://registry.npmjs.org/csv2geojson
+23 info trying registry request attempt 1 at 12:02:43
+24 http GET https://registry.npmjs.org/csv2geojson
+25 http 200 https://registry.npmjs.org/csv2geojson
+26 silly registry.get cb [ 200,
+26 silly registry.get   { date: 'Wed, 25 Mar 2015 19:02:43 GMT',
+26 silly registry.get     server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+26 silly registry.get     etag: '"PW7E14ZXZZ5BCXJR3OV1KIAZ"',
+26 silly registry.get     'content-type': 'application/json',
+26 silly registry.get     'cache-control': 'max-age=60',
+26 silly registry.get     'content-length': '18712',
+26 silly registry.get     'accept-ranges': 'bytes',
+26 silly registry.get     via: '1.1 varnish',
+26 silly registry.get     age: '0',
+26 silly registry.get     'x-served-by': 'cache-lax1429-LAX',
+26 silly registry.get     'x-cache': 'MISS',
+26 silly registry.get     'x-cache-hits': '0',
+26 silly registry.get     'x-timer': 'S1427310163.808581,VS0,VE146',
+26 silly registry.get     vary: 'Accept',
+26 silly registry.get     'keep-alive': 'timeout=10, max=50',
+26 silly registry.get     connection: 'Keep-Alive' } ]
+27 silly addNameRange number 2 { name: 'csv2geojson', range: '*', hasData: true }
+28 silly addNameRange versions [ 'csv2geojson',
+28 silly addNameRange   [ '0.0.0',
+28 silly addNameRange     '0.0.1',
+28 silly addNameRange     '2.0.0',
+28 silly addNameRange     '3.0.0',
+28 silly addNameRange     '3.1.0',
+28 silly addNameRange     '3.2.0',
+28 silly addNameRange     '3.3.0',
+28 silly addNameRange     '3.4.0',
+28 silly addNameRange     '3.4.1',
+28 silly addNameRange     '3.5.1',
+28 silly addNameRange     '3.5.2',
+28 silly addNameRange     '3.6.0',
+28 silly addNameRange     '3.6.1',
+28 silly addNameRange     '3.7.0',
+28 silly addNameRange     '3.7.1',
+28 silly addNameRange     '3.8.0',
+28 silly addNameRange     '4.0.0' ] ]
+29 verbose addNamed [ 'csv2geojson', '4.0.0' ]
+30 verbose addNamed [ '4.0.0', '4.0.0' ]
+31 silly lockFile 84ca5db5-csv2geojson-4-0-0 csv2geojson@4.0.0
+32 verbose lock csv2geojson@4.0.0 /Users/mapsam/.npm/84ca5db5-csv2geojson-4-0-0.lock
+33 silly lockFile f2583e45-sv2geojson-csv2geojson-4-0-0-tgz https://registry.npmjs.org/csv2geojson/-/csv2geojson-4.0.0.tgz
+34 verbose lock https://registry.npmjs.org/csv2geojson/-/csv2geojson-4.0.0.tgz /Users/mapsam/.npm/f2583e45-sv2geojson-csv2geojson-4-0-0-tgz.lock
+35 verbose addRemoteTarball [ 'https://registry.npmjs.org/csv2geojson/-/csv2geojson-4.0.0.tgz',
+35 verbose addRemoteTarball   'b0620d42850dad93651d12ea7d6c0ee5278c4995' ]
+36 info retry fetch attempt 1 at 12:02:44
+37 verbose fetch to= /var/folders/s7/dhvfqhjs51g_w_lx61r70l300000gn/T/npm-57049-wuncM2QF/registry.npmjs.org/csv2geojson/-/csv2geojson-4.0.0.tgz
+38 http GET https://registry.npmjs.org/csv2geojson/-/csv2geojson-4.0.0.tgz
+39 http 200 https://registry.npmjs.org/csv2geojson/-/csv2geojson-4.0.0.tgz
+40 silly lockFile f2583e45-sv2geojson-csv2geojson-4-0-0-tgz https://registry.npmjs.org/csv2geojson/-/csv2geojson-4.0.0.tgz
+41 silly lockFile f2583e45-sv2geojson-csv2geojson-4-0-0-tgz https://registry.npmjs.org/csv2geojson/-/csv2geojson-4.0.0.tgz
+42 silly lockFile 84ca5db5-csv2geojson-4-0-0 csv2geojson@4.0.0
+43 silly lockFile 84ca5db5-csv2geojson-4-0-0 csv2geojson@4.0.0
+44 silly lockFile 19118c75-csv2geojson csv2geojson@
+45 silly lockFile 19118c75-csv2geojson csv2geojson@
+46 silly resolved [ { name: 'csv2geojson',
+46 silly resolved     version: '4.0.0',
+46 silly resolved     description: 'convert CSV files to GeoJSON',
+46 silly resolved     main: 'index.js',
+46 silly resolved     repository:
+46 silly resolved      { type: 'git',
+46 silly resolved        url: 'https://github.com/mapbox/csv2geojson.git' },
+46 silly resolved     scripts:
+46 silly resolved      { test: 'mocha -R spec',
+46 silly resolved        build: 'browserify -s csv2geojson index.js > csv2geojson.js' },
+46 silly resolved     bin: { csv2geojson: 'csv2geojson' },
+46 silly resolved     license: 'BSD',
+46 silly resolved     devDependencies:
+46 silly resolved      { brfs: '^1.3.0',
+46 silly resolved        browserify: '^8.1.3',
+46 silly resolved        'expect.js': '~0.2.0',
+46 silly resolved        mocha: '~1.8',
+46 silly resolved        'mocha-phantomjs': '~1.1.1' },
+46 silly resolved     dependencies:
+46 silly resolved      { optimist: '~0.6.1',
+46 silly resolved        dsv: '0.0.3',
+46 silly resolved        sexagesimal: '0.4.0',
+46 silly resolved        'concat-stream': '~1.0.1' },
+46 silly resolved     gitHead: '1f7205585d703dd6b8caebbe17d4c679b78b296c',
+46 silly resolved     bugs: { url: 'https://github.com/mapbox/csv2geojson/issues' },
+46 silly resolved     homepage: 'https://github.com/mapbox/csv2geojson',
+46 silly resolved     _id: 'csv2geojson@4.0.0',
+46 silly resolved     _shasum: 'b0620d42850dad93651d12ea7d6c0ee5278c4995',
+46 silly resolved     _from: 'csv2geojson@',
+46 silly resolved     _npmVersion: '2.3.0',
+46 silly resolved     _nodeVersion: '0.10.36',
+46 silly resolved     _npmUser: { name: 'tmcw', email: 'tom@macwright.org' },
+46 silly resolved     maintainers: [ [Object], [Object] ],
+46 silly resolved     dist:
+46 silly resolved      { shasum: 'b0620d42850dad93651d12ea7d6c0ee5278c4995',
+46 silly resolved        tarball: 'http://registry.npmjs.org/csv2geojson/-/csv2geojson-4.0.0.tgz' },
+46 silly resolved     directories: {},
+46 silly resolved     _resolved: 'https://registry.npmjs.org/csv2geojson/-/csv2geojson-4.0.0.tgz' } ]
+47 info install csv2geojson@4.0.0 into /usr/local/lib
+48 info installOne csv2geojson@4.0.0
+49 verbose lib/node_modules/csv2geojson unbuild
+50 verbose tar unpack /Users/mapsam/.npm/csv2geojson/4.0.0/package.tgz
+51 silly lockFile 2e9ad54a-cal-lib-node-modules-csv2geojson tar:///usr/local/lib/node_modules/csv2geojson
+52 verbose lock tar:///usr/local/lib/node_modules/csv2geojson /Users/mapsam/.npm/2e9ad54a-cal-lib-node-modules-csv2geojson.lock
+53 silly lockFile fa539a25-pm-csv2geojson-4-0-0-package-tgz tar:///Users/mapsam/.npm/csv2geojson/4.0.0/package.tgz
+54 verbose lock tar:///Users/mapsam/.npm/csv2geojson/4.0.0/package.tgz /Users/mapsam/.npm/fa539a25-pm-csv2geojson-4-0-0-package-tgz.lock
+55 silly gunzTarPerm modes [ '755', '644' ]
+56 error Error: EACCES, mkdir '/usr/local/lib/node_modules/csv2geojson'
+56 error  { [Error: EACCES, mkdir '/usr/local/lib/node_modules/csv2geojson']
+56 error   errno: 3,
+56 error   code: 'EACCES',
+56 error   path: '/usr/local/lib/node_modules/csv2geojson',
+56 error   fstream_type: 'Directory',
+56 error   fstream_path: '/usr/local/lib/node_modules/csv2geojson',
+56 error   fstream_class: 'DirWriter',
+56 error   fstream_stack:
+56 error    [ '/usr/local/lib/node_modules/npm/node_modules/fstream/lib/dir-writer.js:36:23',
+56 error      '/usr/local/lib/node_modules/npm/node_modules/mkdirp/index.js:46:53',
+56 error      'Object.oncomplete (fs.js:107:15)' ] }
+57 error Please try running this command again as root/Administrator.
+58 error System Darwin 14.1.0
+59 error command "node" "/usr/local/bin/npm" "install" "-g" "csv2geojson"
+60 error cwd /Users/mapsam/github/fellows-map
+61 error node -v v0.10.33
+62 error npm -v 1.4.28
+63 error path /usr/local/lib/node_modules/csv2geojson
+64 error fstream_path /usr/local/lib/node_modules/csv2geojson
+65 error fstream_type Directory
+66 error fstream_class DirWriter
+67 error code EACCES
+68 error errno 3
+69 error stack Error: EACCES, mkdir '/usr/local/lib/node_modules/csv2geojson'
+70 error fstream_stack /usr/local/lib/node_modules/npm/node_modules/fstream/lib/dir-writer.js:36:23
+70 error fstream_stack /usr/local/lib/node_modules/npm/node_modules/mkdirp/index.js:46:53
+70 error fstream_stack Object.oncomplete (fs.js:107:15)
+71 verbose exit [ 3, true ]

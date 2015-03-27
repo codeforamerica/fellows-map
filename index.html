@@ -11,6 +11,17 @@
 <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700' rel='stylesheet' type='text/css'>
 <script type="text/javascript" src="cluster.js"></script>
     <style>
+    .cf:before,
+    .cf:after {
+        content:" ";
+        display:table;
+    }
+    .cf:after {
+        clear:both;
+    }
+    .cf {
+        *zoom:1;
+    }
     body {
       background-color: Fuchsia;
       margin: 0;
@@ -74,6 +85,24 @@
       width:100%;
     }
 
+    /* fellow markers */
+    .fellow-marker {
+      width:150px !important;
+      height:auto !important;
+      background:white;
+      padding:0;
+      border-radius:3px;
+      overflow:hidden;
+      box-shadow:0 0 2px 0 rgba(0,0,0,0.4);
+    }
+    .fellow-marker-image {
+      width:45px;
+      height:auto;
+      margin-right:5px;
+      float:left;
+    }
+
+
     </style>
  
 </head>
@@ -86,10 +115,22 @@
 
   //Add a basemap
   L.tileLayer('http://{s}.tiles.mapbox.com/v3/svmatthews.lidab7g5/{z}/{x}/{y}.png').addTo(map); 
-  var geoJson= L.geoJson(fellowsdata, {
-    onEachFeature: thursday
+  
+  // create geojson feature, but don't add to map
+  var geoJson = L.geoJson(fellowsdata, {
+    onEachFeature: onEachFeature,
+    pointToLayer: function (feature, latlng) {
+      return L.marker(latlng, {
+        icon: L.divIcon({
+          className: 'fellow-marker cf',
+          html: '<img class="fellow-marker-image" src="http://www.codeforamerica.org/media/images/people/'+feature.properties.image+'"><span class="fellow-marker-name">'+feature.properties.Name+'</span>'
+        })
+      })
+    }
   });
-  function thursday(feature,layer){
+
+  // do this on every single marker/fellow
+  function onEachFeature (feature, layer) {
     console.log(feature);
       var info = feature.properties;
 
@@ -102,6 +143,8 @@
       }
 
   }
+
+  // set up markers object with markerClusterGroup
 	var markers = L.markerClusterGroup({
     iconCreateFunction: function(cluster) {
       return new L.DivIcon({
@@ -110,10 +153,17 @@
         iconAnchor: L.point(22,22)
       })
     },
-    showCoverageOnHover: false
+    showCoverageOnHover: false,
+    spiderfyLinear: true
   });
+
+  // add the geojson object to the markers group
 	markers.addLayer(geoJson);
+
+  // add the markers to the map now that they are clustered
 	map.addLayer(markers);
+
+  // fit the map to the bounds of the markers
 	map.fitBounds(markers.getBounds());
 </script>
 </body>
