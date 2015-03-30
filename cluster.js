@@ -31,6 +31,12 @@ L.MarkerClusterGroup = L.FeatureGroup.extend({
 		//Increase to increase the distance away that spiderfied markers appear from the center
 		spiderfyDistanceMultiplier: 1,
 
+		// Make it possible to create linear set of markers on spiderfy
+    spiderfyLinear: false,
+    spiderfyLinearDistance: 30, // negative numbers will go to the left of cluster
+    spiderfyLinearSeparation: 50, // works with leaflet default marker
+
+
 		// When bulk adding layers, adds markers in chunks. Means addLayers may not add all the layers in the call, others will be loaded during setTimeouts
 		chunkedLoading: false,
 		chunkInterval: 200, // process markers for a maximum of ~ n milliseconds (then trigger the chunkProgress callback)
@@ -1765,11 +1771,11 @@ L.MarkerCluster.include({
 
 		//TODO Maybe: childMarkers order by distance to center
 
-		if (childMarkers.length >= this._circleSpiralSwitchover) {
-			positions = this._generatePointsSpiral(childMarkers.length, center);
+		if (this._group.options.spiderfyLinear) { // checks for linear spiderfy
+		  positions = this._generatePointsLine(childMarkers.length, center);
 		} else {
-			center.y += 10; //Otherwise circles look wrong
-			positions = this._generatePointsCircle(childMarkers.length, center);
+		  center.y += 10; //Otherwise circles look wrong
+		  positions = this._generatePointsCircle(childMarkers.length, center);
 		}
 
 		this._animationSpiderfy(childMarkers, positions);
@@ -1818,6 +1824,24 @@ L.MarkerCluster.include({
 			legLength += this._2PI * lengthFactor / angle;
 		}
 		return res;
+	},
+
+	_generatePointsLine: function (count, centerPt) {
+	  var distanceFromCenter = this._group.options.spiderfyLinearDistance,
+	      markerDistance = this._group.options.spiderfyLinearSeparation,
+	      lineLength = markerDistance * (count - 1),
+	      lineStart = centerPt.y - lineLength / 2,
+	      res = [],
+	      i;
+
+	  res.length = count;
+
+	  for (i = count - 1; i >= 0; i--) {
+	    res[i] = new L.Point(centerPt.x + distanceFromCenter, lineStart + markerDistance * i);
+	  }
+
+	  return res;
+	  
 	},
 
 	_noanimationUnspiderfy: function () {
