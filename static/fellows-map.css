@@ -1,3 +1,14 @@
+* {
+  font-family: 'Source Sans Pro', sans-serif;
+  -webkit-transition: .3s;
+     -moz-transition: .3s;
+      -ms-transition: .3s;
+       -o-transition: .3s;
+          transition: .3s;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
 .cf:before,
 .cf:after {
     content:" ";
@@ -9,22 +20,43 @@
 .cf {
     *zoom:1;
 }
+.fa {
+  line-height:inherit;
+}
 body {
   background-color: Fuchsia;
   margin: 0;
   padding: 0;
-  font-family: 'Source Sans Pro', sans-serif;
 }
+
+
+/*
+  HELPERS
+*/
+.pull-right {
+  float:right;
+}
+
+
+
 #map {
   position: absolute;
   width:100%;
   height:100%;
   background-color:#c0c0c0; /* just to ensure the element is there */
 }
+
+
+/*
+  CLUSTERS
+*/
 .cluster-wrapper {}
 .cluster {
+  box-shadow:0 0 2px 0 rgba(0,0,0,0.5);
+  font-size:1.5em;
+  font-weight:900;
   text-align: center;
-  background-color: #399fd3;
+  background-color: #cf1b41;
   border-radius: 50%;
   position:relative; /* important for the .outer div */
   width:50px;
@@ -33,14 +65,9 @@ body {
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
-  -webkit-transition: .2s;
-     -moz-transition: .2s;
-      -ms-transition: .2s;
-       -o-transition: .2s;
-          transition: .2s;
 }
 .cluster:hover {
-  border: 2px solid #cf1b41;
+  box-shadow:0 0 10px 0 rgba(0,0,0,0.6);
 }
 .cluster-outer {
   display: table;
@@ -54,28 +81,62 @@ body {
   color:white;
   font-size:1.2em;
 }
-.leaflet-popup-content-wrapper {
-  border:5px solid #cf1b41;
-  width:250px;
-}
-.leaflet-popup-tip {
-  background:#cf1b41;
-}
-.leaflet-popup-content {
-  font-family: 'Source Sans Pro', sans-serif;
+
+/*
+  POINT MARKERS
+*/
+.fellow-marker {
+  width:150px !important;
+  height:auto !important;
+  background:rgba(255,255,255,0.5);
+  font-weight:900;
   padding:10px;
-  margin:0;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+  font-size:1.2em;
+  overflow:hidden;
 }
-.leaflet-popup-content h1 {
+.fellow-marker:hover {
+  background:rgba(255,255,255,0.8);
+}
+
+.fellow-marker.active {
+  background:white;
+  color:#399fd3;
+}
+
+
+/*
+  POPUPS
+*/
+.leaflet-popup-content-wrapper {
+  border-radius:0px;
+  box-shadow:none;
+  padding:60px 10px 10px 10px;
+  width:250px;
+  height:300px;
+  border-bottom:2px solid #cf1b41;
+}
+.leaflet-popup-tip-container { display:none; }
+.leaflet-popup-content {
+  padding:0;
   margin:0;
 }
-.leaflet-popup-content img {
-  display: block;
-  margin-top:10px;
+
+.popup-image {
+  background:white;
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  left: 50%;
+  margin-left: -60px;
+  top: -60px;
+  border: 5px solid white;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.popup-image img {
   width:100%;
+  height:auto;
 }
 
 .social-links {
@@ -85,21 +146,4 @@ body {
   display:inline-block;
   font-size:1.5em;
   color:#333;
-}
-
-/* fellow markers */
-.fellow-marker {
-  width:150px !important;
-  height:auto !important;
-  background:white;
-  padding:0;
-  border-radius:3px;
-  overflow:hidden;
-  box-shadow:0 0 2px 0 rgba(0,0,0,0.4);
-}
-.fellow-marker-image {
-  width:45px;
-  height:auto;
-  margin-right:5px;
-  float:left;
 }
