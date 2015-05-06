@@ -1,4 +1,5 @@
 var map, fellowsData;
+var fellowsNameArray = [];
 
 function init() {
   //initialize the map
@@ -53,6 +54,51 @@ function makeMap(data, tabletop) {
 
   // fit the map to the bounds of the markers
   map.fitBounds(markers.getBounds());
+
+  // prepare typeahead search object
+  doTheSearchDance();
+}
+
+function doTheSearchDance() {
+  var fellowSearch = new Bloodhound({
+    datumTokenizer: Bloodhound.tokenizers.whitespace,
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    // `states` is an array of state names defined in "The Basics"
+    local: fellowsNameArray
+  });
+
+  $('#search').typeahead({
+    highlight: true,
+    minLength: 1
+  },
+  {
+    name: 'fellow-names',
+    source: fellowSearch
+  });
+
+  $("#search").bind("keypress", {}, enterSearch);
+
+  function enterSearch(e) {
+      var code = (e.keyCode ? e.keyCode : e.which);
+      if (code == 13) { //Enter keycode                        
+          e.preventDefault();
+          var value = document.getElementById('search').value;
+          getSearchData(value);
+      }
+  };
+}
+
+function getSearchData(name) {
+  markers.eachLayer(function (layer) {
+    if (name == layer.feature.properties.Name) {
+      markers.zoomToShowLayer(layer, function() {
+        console.log(layer);
+        layer._icon.className += ' active';
+        layer.openPopup();
+      });
+      console.log('we found a match! ' + layer.feature.properties.Name);
+    }
+  });
 }
 
 function markerClick(e) {
@@ -102,7 +148,11 @@ function makeGeoJsonFeature(feature) {
 
 // do this on every single marker/fellow
 function onEachFeature (feature, layer) {
+
     var info = feature.properties;
+
+    // push to array for typeahead usage
+    fellowsNameArray.push(info.Name);
 
     var popupContent = "";
     popupContent += "<div class='popup-image'><img src='http://www.codeforamerica.org/media/images/people/" + info.image + "'></div>";
