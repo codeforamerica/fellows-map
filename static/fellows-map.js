@@ -7,7 +7,7 @@ function init() {
     "type": "FeatureCollection",
     "features": []
   };
-  L.tileLayer('https://{s}.tiles.mapbox.com/v4/examples.map-i87786ca/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiY29kZWZvcmFtZXJpY2EiLCJhIjoiSTZlTTZTcyJ9.3aSlHLNzvsTwK-CYfZsG_Q').addTo(map);
+  L.tileLayer('https://{s}.tiles.mapbox.com/v4/codeforamerica.map-hhckoiuj/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiY29kZWZvcmFtZXJpY2EiLCJhIjoiSTZlTTZTcyJ9.3aSlHLNzvsTwK-CYfZsG_Q').addTo(map);
 
 
   Tabletop.init({
@@ -38,7 +38,8 @@ function makeMap(data, tabletop) {
       return L.marker(latlng, {
         icon: L.divIcon({
           className: 'fellow-marker cf',
-          html: '<span class="fellow-marker-name">'+feature.properties.Name+'<i class="fa fa-chevron-right pull-right"></i></span>'
+          html: '<span class="fellow-marker-name">'+feature.properties.Name+'<i class="fa fa-chevron-right pull-right"></i></span>',
+          iconAnchor: L.point(0,20)
         })
       }).on('click', markerClick);
     }
@@ -105,13 +106,13 @@ function onEachFeature (feature, layer) {
 
     var popupContent = "";
     popupContent += "<div class='popup-image'><img src='http://www.codeforamerica.org/media/images/people/" + info.image + "'></div>";
+    popupContent += "<p class='popup-city'><strong>" + info["Fellowship City"] + "</strong>, " + info["Fellowship Year"] + "</p>";
+    popupContent += "<p class='popup-skill'>" + info.Skill + "</p>";
     popupContent += "<div class='social-links'><a target='_blank' class='social' href='" + info.linkedin + "'><i class='fa fa-linkedin-square'></i></a></div>";
-    popupContent += "<strong>Fellowship City: </strong> " + info["Fellowship City"] + ", " + info["Fellowship Year"] + "<br>";
-    popupContent += "<strong>Skill: </strong>" + info.Skill + "<br>";
     
     if (info && info.Name) {
         layer.bindPopup(popupContent, {
-          offset: L.point(269,294)
+          offset: L.point(310,280)
         });
     }
 

@@ -1,3 +1,11 @@
+.red { color:#cf1b41; }
+.redbg { background-color:#cf1b41; }
+.blue { color:#399fd3; }
+.bluebg { background-color:#399fd3; }
+.lightblue { color:#7ab5d6; }
+.lightbluebg { background-color:#7ab5d6; }
+
+
 * {
   font-family: 'Source Sans Pro', sans-serif;
   -webkit-transition: .3s;
@@ -86,20 +94,21 @@ body {
   POINT MARKERS
 */
 .fellow-marker {
-  width:150px !important;
+  width:190px !important;
   height:auto !important;
-  background:rgba(255,255,255,0.5);
+  background:#ddd;
   font-weight:900;
   padding:10px;
   font-size:1.2em;
   overflow:hidden;
+  border-left:2px solid #cf1b41;
 }
 .fellow-marker:hover {
-  background:rgba(255,255,255,0.8);
+  background:#f1f1f1;
 }
 
 .fellow-marker.active {
-  background:white;
+  background:#f1f1f1;
   color:#399fd3;
 }
 
@@ -114,22 +123,29 @@ body {
   width:250px;
   height:300px;
   border-bottom:2px solid #cf1b41;
+  background:#f1f1f1 !important;
 }
 .leaflet-popup-tip-container { display:none; }
 .leaflet-popup-content {
   padding:0;
   margin:0;
+  font-size:1.4em;
+  text-align:center;
+}
+.leaflet-popup-content p {
+  margin:0 !important;
+  padding:0 !important;
 }
 
 .popup-image {
-  background:white;
+  background:rgb(215,215,215);
   position: absolute;
   width: 120px;
   height: 120px;
   left: 50%;
   margin-left: -60px;
   top: -60px;
-  border: 5px solid white;
+  border: 5px solid #e5e5e5;
   border-radius: 50%;
   overflow: hidden;
 }
@@ -137,6 +153,11 @@ body {
 .popup-image img {
   width:100%;
   height:auto;
+}
+
+.popup-city { color: #cf1b41; }
+.popup-skill {
+  font-size:.8em;
 }
 
 .social-links {
