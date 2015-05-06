@@ -7,7 +7,7 @@ function init() {
     "type": "FeatureCollection",
     "features": []
   };
-  L.tileLayer('http://{s}.tiles.mapbox.com/v3/svmatthews.lidab7g5/{z}/{x}/{y}.png').addTo(map);
+  L.tileLayer('https://{s}.tiles.mapbox.com/v4/codeforamerica.map-hhckoiuj/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiY29kZWZvcmFtZXJpY2EiLCJhIjoiSTZlTTZTcyJ9.3aSlHLNzvsTwK-CYfZsG_Q').addTo(map);
 
 
   Tabletop.init({
@@ -18,6 +18,9 @@ function init() {
 }
 
 function makeMap(data, tabletop) {
+
+  // convert json to geojson spec and 
+  // add as a feature to the fellowsData object
   for (var i = 0; i < data.length; i++) {
     (function(row) {
       if (row.Lat) {
@@ -27,15 +30,18 @@ function makeMap(data, tabletop) {
     })(data[i]);
   }
 
+  // add a new geojson object to the map from
+  // the fellowsData object
   geoJson = L.geoJson(fellowsData, {
     onEachFeature: onEachFeature,
     pointToLayer: function (feature, latlng) {
       return L.marker(latlng, {
         icon: L.divIcon({
           className: 'fellow-marker cf',
-          html: '<img class="fellow-marker-image" src="http://www.codeforamerica.org/media/images/people/'+feature.properties.image+'"><span class="fellow-marker-name">'+feature.properties.Name+'</span>'
+          html: '<span class="fellow-marker-name">'+feature.properties.Name+'<i class="fa fa-chevron-right pull-right"></i></span>',
+          iconAnchor: L.point(0,20)
         })
-      })
+      }).on('click', markerClick);
     }
   });
 
@@ -49,8 +55,23 @@ function makeMap(data, tabletop) {
   map.fitBounds(markers.getBounds());
 }
 
+function markerClick(e) {
+
+  // remove all 'active' classes from markers
+  var mrks = document.getElementsByClassName('fellow-marker');
+  for (var m = 0; m < mrks.length; m++) {
+    mrks[m].className = mrks[m].className.replace('active', '');
+  }
+
+  // add active class to clicked item
+  this._icon.className += ' active';
+
+}
+
+/* Create a GeoJSON Feature
+ *
+ */
 function makeGeoJsonFeature(feature) {
-  console.log(feature);
 
   var newFeature = {
     "type": "Feature",
@@ -63,6 +84,7 @@ function makeGeoJsonFeature(feature) {
       "Name": feature['Name'],
       "Skill": feature.Skill,
       "linkedin": feature.LinkedIn,
+      "twitter": feature.twitter,
       "Fellowship Year": feature['Fellowship Year']
     },
     "geometry": {
@@ -82,14 +104,16 @@ function makeGeoJsonFeature(feature) {
 function onEachFeature (feature, layer) {
     var info = feature.properties;
 
-    var popupContent = "<h1>"+info.Name+"</h1>";
+    var popupContent = "";
+    popupContent += "<div class='popup-image'><img src='http://www.codeforamerica.org/media/images/people/" + info.image + "'></div>";
+    popupContent += "<p class='popup-city'><strong>" + info["Fellowship City"] + "</strong>, " + info["Fellowship Year"] + "</p>";
+    popupContent += "<p class='popup-skill'>" + info.Skill + "</p>";
     popupContent += "<div class='social-links'><a target='_blank' class='social' href='" + info.linkedin + "'><i class='fa fa-linkedin-square'></i></a></div>";
-    popupContent += "<strong>Fellowship City: </strong> " + info["Fellowship City"] + ", " + info["Fellowship Year"] + "<br>";
-    popupContent += "<strong>Skill: </strong>" + info.Skill + "<br>";
-    popupContent += "<img src='http://www.codeforamerica.org/media/images/people/" + info.image + "'>";
     
     if (info && info.Name) {
-        layer.bindPopup(popupContent);
+        layer.bindPopup(popupContent, {
+          offset: L.point(310,280)
+        });
     }
 
 }
@@ -104,7 +128,10 @@ var markers = L.markerClusterGroup({
     })
   },
   showCoverageOnHover: false,
-  spiderfyLinear: true
+  spiderfyLinear: true, // custom implementation of cluster
+  spiderfyLinearDistance: 50, // custom implementation of cluster
+  spiderfyLinearSeparation: 50, // custom implementation of cluster
+
 });
 
 window.onload = init();
