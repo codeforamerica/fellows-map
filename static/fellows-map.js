@@ -162,7 +162,8 @@ function onEachFeature (feature, layer) {
     
     if (info && info.Name) {
         layer.bindPopup(popupContent, {
-          offset: L.point(310,280)
+          offset: L.point(310,280),
+          autoPanPadding: L.point(100, 80)
         });
     }
 
