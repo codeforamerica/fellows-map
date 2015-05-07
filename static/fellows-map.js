@@ -123,15 +123,15 @@ function makeGeoJsonFeature(feature) {
     "type": "Feature",
     "properties": {
       "image": feature.image,
-      "Fellowship City": feature['Fellowship City'],
+      "fellowship_city": feature['Fellowship City'],
       "State": feature.State,
       "First Name": feature['First Name'],
       "Last Name": feature['Last Name'],
       "Name": feature['Name'],
       "Skill": feature.Skill,
       "linkedin": feature.LinkedIn,
-      "twitter": feature.twitter,
-      "Fellowship Year": feature['Fellowship Year']
+      "twitter": feature.Twitter,
+      "fellowship_year": feature['Fellowship Year']
     },
     "geometry": {
       "type": "Point",
@@ -148,6 +148,7 @@ function makeGeoJsonFeature(feature) {
 
 // do this on every single marker/fellow
 function onEachFeature (feature, layer) {
+    console.log(feature);
 
     var info = feature.properties;
 
@@ -156,10 +157,13 @@ function onEachFeature (feature, layer) {
 
     var popupContent = "";
     popupContent += "<div class='popup-image'><img src='http://www.codeforamerica.org/media/images/people/" + info.image + "'></div>";
-    popupContent += "<p class='popup-city'><strong>" + info["Fellowship City"] + "</strong>, " + info["Fellowship Year"] + "</p>";
+    popupContent += "<p class='popup-city'><strong>" + info["fellowship_city"] + "</strong>, " + info["fellowship_year"] + "</p>";
     popupContent += "<p class='popup-skill'>" + info.Skill + "</p>";
-    popupContent += "<div class='social-links'><a target='_blank' class='social' href='" + info.linkedin + "'><i class='fa fa-linkedin-square'></i></a></div>";
+    popupContent += "<div class='social-links'><a target='_blank' class='social' href='" + info.linkedin + "'><i class='fa fa-linkedin-square'></i></a>&nbsp;&nbsp;<a target='_blank' class='social' href='" + info.twitter + "'><i class='fa fa-twitter-square'></i></a></div>";
+    //popupContent += "<div class='social-links'><a target='_blank' class='social' href='" + info.twitter + "'><i class='fa fa-twitter-square'></i></a></div>";
     
+    console.log(info.twitter);
+
     if (info && info.Name) {
         layer.bindPopup(popupContent, {
           offset: L.point(310,280),
