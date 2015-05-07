@@ -57,6 +57,9 @@ function makeMap(data, tabletop) {
 
   // prepare typeahead search object
   doTheSearchDance();
+
+  // prepare filters
+  doTheFilterDance();
 }
 
 function doTheSearchDance() {
@@ -99,6 +102,58 @@ function getSearchData(name) {
       console.log('we found a match! ' + layer.feature.properties.Name);
     }
   });
+}
+
+function doTheFilterDance() {
+  $('.filter').on('click', filterClick);
+}
+
+function filterClick( e ) {
+  // update current button
+  $('.filter').removeClass('current');
+  $(this).addClass('current');
+
+  // filter the map
+  filterMap($(this).attr('id'));
+}
+
+// use to add/remove layers on each filter
+var layersToRemove = [];
+function filterMap(year) {
+  // update map before filtering
+  markers.addLayers(layersToRemove);
+
+  // reset for next filter
+  layersToRemove = [];
+
+  if (year != 'all') {
+    // check each layer, if it matches the year, push into array
+    markers.eachLayer(function(layer) {
+      if (year != layer.feature.properties['Fellowship Year']) {
+        console.log(layer);
+        layer.closePopup();
+        layersToRemove.push(layer);
+      }
+    });
+
+    // fit bounds of markers to un spiderfy them
+    map.fitBounds(markers.getBounds());
+
+    // use array to remove layers
+    // https://github.com/Leaflet/Leaflet.markercluster#bulk-adding-and-removing-markers
+    markers.removeLayers(layersToRemove);
+  }
+
+  map.fitBounds(markers.getBounds());
+}
+
+var reset = {
+  actions: function() {
+    // reset all search & filters
+  },
+  extent: function() {
+    // reset map view
+  }
 }
 
 function markerClick(e) {
