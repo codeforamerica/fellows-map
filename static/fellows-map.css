@@ -75,6 +75,37 @@ nav.nav {
 .actions {
   float:right;
 }
+.action {
+  display:inline-block;
+  margin:0; padding:0;
+  vertical-align: middle;
+}
+
+
+.filters {
+  margin:0;
+  padding:0 1em 0 0;
+}
+.filter {
+  background:#ba183a;
+  color:#f6f6f6;
+  font-size:1em;
+  padding:.5em 1em;
+  border:none;
+  cursor:pointer;
+}
+.filter:focus {
+  outline:none;
+}
+.filter:hover {
+  background:#d33154;
+}
+.filter.current {
+  background:white;
+  color:#ba183a;
+}
+
+
 .search-input {
   background:#ba183a;
 }
