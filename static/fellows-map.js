@@ -118,6 +118,7 @@ function markerClick(e) {
  *
  */
 function makeGeoJsonFeature(feature) {
+  console.log(feature);
 
   var newFeature = {
     "type": "Feature",
@@ -125,13 +126,15 @@ function makeGeoJsonFeature(feature) {
       "image": feature.image,
       "fellowship_city": feature['Fellowship City'],
       "State": feature.State,
-      "First Name": feature['First Name'],
+      "first_name": feature['First Name'],
       "Last Name": feature['Last Name'],
       "Name": feature['Name'],
       "Skill": feature.Skill,
       "linkedin": feature.LinkedIn,
       "twitter": feature.Twitter,
-      "fellowship_year": feature['Fellowship Year']
+      "fellowship_year": feature['Fellowship Year'],
+      "seal": feature.Seal,
+      "city_page": feature['City Page']
     },
     "geometry": {
       "type": "Point",
@@ -160,6 +163,7 @@ function onEachFeature (feature, layer) {
     popupContent += "<p class='popup-city'><strong>" + info["fellowship_city"] + "</strong>, " + info["fellowship_year"] + "</p>";
     popupContent += "<p class='popup-skill'>" + info.Skill + "</p>";
     popupContent += "<div class='social-links'><a target='_blank' class='social' href='" + info.linkedin + "'><i class='fa fa-linkedin-square'></i></a>&nbsp;&nbsp;<a target='_blank' class='social' href='" + info.twitter + "'><i class='fa fa-twitter-square'></i></a></div>";
+    popupContent += "<div class='popup-seal'><a href='" + info.city_page +"'> <img src='http://www.codeforamerica.org/media/images/governments/" + info.seal + "'></a> </div>";
     //popupContent += "<div class='social-links'><a target='_blank' class='social' href='" + info.twitter + "'><i class='fa fa-twitter-square'></i></a></div>";
     
     console.log(info.twitter);
