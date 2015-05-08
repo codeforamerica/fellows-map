@@ -1,23 +1,74 @@
-var map, fellowsData;
+var map, fellowsData, markers;
 var fellowsNameArray = [];
 
+/*
+**
+** INITIALIZE
+** Initializes the map, tiles, and Tabletop, and event listeners
+**
+*/
 function init() {
   //initialize the map
   map = L.map('map').setView([34.30714385628804, -112.0166015625], 4);
+  
   fellowsData = {
     "type": "FeatureCollection",
     "features": []
   };
-  L.tileLayer('https://{s}.tiles.mapbox.com/v4/codeforamerica.map-hhckoiuj/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiY29kZWZvcmFtZXJpY2EiLCJhIjoiSTZlTTZTcyJ9.3aSlHLNzvsTwK-CYfZsG_Q').addTo(map);
 
+  L.tileLayer('https://{s}.tiles.mapbox.com/v4/codeforamerica.map-hhckoiuj/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiY29kZWZvcmFtZXJpY2EiLCJhIjoiSTZlTTZTcyJ9.3aSlHLNzvsTwK-CYfZsG_Q').addTo(map);
 
   Tabletop.init({
     key: '1yFx14zL13sz1UXOhY8MVZSzWWG-tvEdcFVe2CaEs-sQ',
     callback: makeMap,
     simpleSheet: true
   });
+
+  addEventListeners();
+  function addEventListeners() {
+    // set filter click event listener
+    $('.filter').on('click', function(){
+      filter($(this).attr('id'));
+    });
+
+    // set search event listener
+    $("#search").bind("keypress", {}, search);
+  }
 }
 
+/*
+**
+** RESET
+** Used globally to reset UI when needed.
+**
+*/
+var reset = {
+  
+  // resets filters to 'all' state
+  filters: function() {
+    filter('all');
+  },
+
+  // resets map view, preserves current filter
+  view: function() {
+    map.fitBounds(markers.getBounds())
+  },
+
+  // resets filters then updates map view to bounds
+  all: function() {
+    this.filters();
+    this.view();
+  }
+}
+
+/*
+**
+** MAKE MAP
+** Callback from Tabletop after it has loaded data from spreadsheets.
+** This function prepares all map data, adds it to the map, and initializes
+** the search functionality (since it depends on the map data).
+**
+*/
 function makeMap(data, tabletop) {
 
   // convert json to geojson spec and 
@@ -34,7 +85,7 @@ function makeMap(data, tabletop) {
   // add a new geojson object to the map from
   // the fellowsData object
   geoJson = L.geoJson(fellowsData, {
-    onEachFeature: onEachFeature,
+    onEachFeature: preparePopups,
     pointToLayer: function (feature, latlng) {
       return L.marker(latlng, {
         icon: L.divIcon({
@@ -44,6 +95,59 @@ function makeMap(data, tabletop) {
         })
       }).on('click', markerClick);
     }
+  });
+
+  // create popups for each feature
+  function preparePopups (feature, layer) {
+
+    var info = feature.properties;
+
+    // push to array for typeahead usage
+    fellowsNameArray.push(info.Name);
+
+    var popupContent = "";
+    popupContent += "<div class='popup-image'><img src='http://www.codeforamerica.org/media/images/people/" + info.image + "'></div>";
+    popupContent += "<p class='popup-city'><strong>" + info["fellowship_city"] + "</strong>, " + info["fellowship_year"] + "</p>";
+    popupContent += "<p class='popup-skill'>" + info.Skill + "</p>";
+    popupContent += "<div class='social-links'><a target='_blank' class='social' href='" + info.linkedin + "'><i class='fa fa-linkedin-square'></i></a>&nbsp;&nbsp;<a target='_blank' class='social' href='" + info.twitter + "'><i class='fa fa-twitter-square'></i></a></div>";
+    popupContent += "<div class='popup-seal'><a href='" + info.city_page +"'> <img src='http://www.codeforamerica.org/media/images/governments/" + info.seal + "'></a> </div>";
+    //popupContent += "<div class='social-links'><a target='_blank' class='social' href='" + info.twitter + "'><i class='fa fa-twitter-square'></i></a></div>";
+    
+    if (info && info.Name) {
+      layer.bindPopup(popupContent, {
+        offset: L.point(310,280),
+        autoPanPadding: L.point(100, 80)
+      });
+    }
+  }
+
+  // marker click callback from .on('click') above
+  function markerClick(e) {
+    var mrks = document.getElementsByClassName('fellow-marker');
+    for (var m = 0; m < mrks.length; m++) {
+      mrks[m].className = mrks[m].className.replace('active', '');
+    }
+    this._icon.className += ' active';
+  }
+
+  /*
+  **
+  ** MARKER CLUSTER PREP
+  ** Initialize the markers with markerClusterGroup to be used below
+  **
+  */
+  markers = L.markerClusterGroup({
+    iconCreateFunction: function(cluster) {
+      return new L.DivIcon({
+        className: 'cluster-wrapper',
+        html: "<div class='cluster'><div class='cluster-outer'><div class='cluster-inner'>"+cluster.getChildCount()+"</div></div></div>",
+        iconAnchor: L.point(22,22)
+      })
+    },
+    showCoverageOnHover: false,
+    spiderfyLinear: true, // custom implementation of cluster
+    spiderfyLinearDistance: 50, // custom implementation of cluster
+    spiderfyLinearSeparation: 50, // custom implementation of cluster
   });
 
   // add the geojson object to the markers group
@@ -56,13 +160,17 @@ function makeMap(data, tabletop) {
   map.fitBounds(markers.getBounds());
 
   // prepare typeahead search object
-  doTheSearchDance();
-
-  // prepare filters
-  doTheFilterDance();
+  prepareSearch();
 }
 
-function doTheSearchDance() {
+/*
+**
+** SEARCH: prepare
+** Uses Typeahead.js and names from the GeoJSON file.
+** Currently binds event listener based on 'enter' keypress
+**
+*/
+function prepareSearch() {
   var fellowSearch = new Bloodhound({
     datumTokenizer: Bloodhound.tokenizers.whitespace,
     queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -78,66 +186,80 @@ function doTheSearchDance() {
     name: 'fellow-names',
     source: fellowSearch
   });
-
-  $("#search").bind("keypress", {}, enterSearch);
-
-  function enterSearch(e) {
-      var code = (e.keyCode ? e.keyCode : e.which);
-      if (code == 13) { //Enter keycode                        
-          e.preventDefault();
-          var value = document.getElementById('search').value;
-          getSearchData(value);
-      }
-  };
 }
 
+function search(e) {
+  var code = (e.keyCode ? e.keyCode : e.which);
+  if (code == 13) {                   
+    e.preventDefault();
+    var value = document.getElementById('search').value;
+    getSearchData(value);
+  } else {
+    console.log('That name does not match anything in our records!');
+  }
+};
+
+/*
+**
+** SEARCH: run search
+** Used globally to reset UI when needed.
+**
+*/
 function getSearchData(name) {
+  // reset filters
+  // https://github.com/codeforamerica/fellows-map/issues/34
+  reset.filters();
+
+  // run through each marker and match search with names
   markers.eachLayer(function (layer) {
     if (name == layer.feature.properties.Name) {
       markers.zoomToShowLayer(layer, function() {
-        console.log(layer);
         layer._icon.className += ' active';
         layer.openPopup();
       });
-      console.log('we found a match! ' + layer.feature.properties.Name);
     }
   });
 }
 
-function doTheFilterDance() {
-  $('.filter').on('click', filterClick);
-}
-
-function filterClick( e ) {
-  // update current button
+/*
+**
+** FILTER
+** Updates buttons
+** Passes filter id to filter the map markers
+**
+*/
+function filter( id ) {
   $('.filter').removeClass('current');
-  $(this).addClass('current');
-
-  // filter the map
-  filterMap($(this).attr('id'));
+  $('#'+id).addClass('current');
+  filterMap(id);
 }
 
-// use to add/remove layers on each filter
+/*
+**
+** FILTER: map
+** Loops through all layers and adds them to 'layersToRemove'
+** to prepare for removal and use for future filter actions
+**
+*/
 var layersToRemove = [];
-function filterMap(year) {
+function filterMap(id) {
   // update map before filtering
   markers.addLayers(layersToRemove);
 
   // reset for next filter
   layersToRemove = [];
 
-  if (year != 'all') {
-    // check each layer, if it matches the year, push into array
+  if (id != 'all') {
+    // check each layer, if it matches the id, push into array
     markers.eachLayer(function(layer) {
-      if (year != layer.feature.properties['Fellowship Year']) {
-        console.log(layer);
+      if (id != layer.feature.properties['Fellowship Year']) {
         layer.closePopup();
         layersToRemove.push(layer);
       }
     });
 
     // fit bounds of markers to un spiderfy them
-    map.fitBounds(markers.getBounds());
+    markers.getParent
 
     // use array to remove layers
     // https://github.com/Leaflet/Leaflet.markercluster#bulk-adding-and-removing-markers
@@ -147,31 +269,14 @@ function filterMap(year) {
   map.fitBounds(markers.getBounds());
 }
 
-var reset = {
-  actions: function() {
-    // reset all search & filters
-  },
-  extent: function() {
-    // reset map view
-  }
-}
 
-function markerClick(e) {
-
-  // remove all 'active' classes from markers
-  var mrks = document.getElementsByClassName('fellow-marker');
-  for (var m = 0; m < mrks.length; m++) {
-    mrks[m].className = mrks[m].className.replace('active', '');
-  }
-
-  // add active class to clicked item
-  this._icon.className += ' active';
-
-}
-
-/* Create a GeoJSON Feature
- *
- */
+/*
+**
+** GEOJSON FEATURE CREATION
+** Returns data from tabletop to fit the geojson spec
+** geojson.org
+**
+*/
 function makeGeoJsonFeature(feature) {
   console.log(feature);
 
@@ -203,49 +308,5 @@ function makeGeoJsonFeature(feature) {
   return newFeature;
 }
 
-
-// do this on every single marker/fellow
-function onEachFeature (feature, layer) {
-    console.log(feature);
-
-    var info = feature.properties;
-
-    // push to array for typeahead usage
-    fellowsNameArray.push(info.Name);
-
-    var popupContent = "";
-    popupContent += "<div class='popup-image'><img src='http://www.codeforamerica.org/media/images/people/" + info.image + "'></div>";
-    popupContent += "<p class='popup-city'><strong>" + info["fellowship_city"] + "</strong>, " + info["fellowship_year"] + "</p>";
-    popupContent += "<p class='popup-skill'>" + info.Skill + "</p>";
-    popupContent += "<div class='social-links'><a target='_blank' class='social' href='" + info.linkedin + "'><i class='fa fa-linkedin-square'></i></a>&nbsp;&nbsp;<a target='_blank' class='social' href='" + info.twitter + "'><i class='fa fa-twitter-square'></i></a></div>";
-    popupContent += "<div class='popup-seal'><a href='" + info.city_page +"'> <img src='http://www.codeforamerica.org/media/images/governments/" + info.seal + "'></a> </div>";
-    //popupContent += "<div class='social-links'><a target='_blank' class='social' href='" + info.twitter + "'><i class='fa fa-twitter-square'></i></a></div>";
-    
-    console.log(info.twitter);
-
-    if (info && info.Name) {
-        layer.bindPopup(popupContent, {
-          offset: L.point(310,280),
-          autoPanPadding: L.point(100, 80)
-        });
-    }
-
-}
-
-// set up markers object with markerClusterGroup
-var markers = L.markerClusterGroup({
-  iconCreateFunction: function(cluster) {
-    return new L.DivIcon({
-      className: 'cluster-wrapper',
-      html: "<div class='cluster'><div class='cluster-outer'><div class='cluster-inner'>"+cluster.getChildCount()+"</div></div></div>",
-      iconAnchor: L.point(22,22)
-    })
-  },
-  showCoverageOnHover: false,
-  spiderfyLinear: true, // custom implementation of cluster
-  spiderfyLinearDistance: 50, // custom implementation of cluster
-  spiderfyLinearSeparation: 50, // custom implementation of cluster
-
-});
 
 window.onload = init();
