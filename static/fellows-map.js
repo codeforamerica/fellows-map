@@ -111,7 +111,6 @@ function makeMap(data, tabletop) {
     popupContent += "<p class='popup-skill'>" + info.Skill + "</p>";
     popupContent += "<div class='social-links'><a target='_blank' class='social' href='" + info.linkedin + "'><i class='fa fa-linkedin-square'></i></a>&nbsp;&nbsp;<a target='_blank' class='social' href='" + info.twitter + "'><i class='fa fa-twitter-square'></i></a></div>";
     popupContent += "<div class='popup-seal'><a href='" + info.city_page +"'> <img src='http://www.codeforamerica.org/media/images/governments/" + info.seal + "'></a> </div>";
-    //popupContent += "<div class='social-links'><a target='_blank' class='social' href='" + info.twitter + "'><i class='fa fa-twitter-square'></i></a></div>";
     
     if (info && info.Name) {
       layer.bindPopup(popupContent, {
@@ -252,7 +251,7 @@ function filterMap(id) {
   if (id != 'all') {
     // check each layer, if it matches the id, push into array
     markers.eachLayer(function(layer) {
-      if (id != layer.feature.properties['Fellowship Year']) {
+      if (id != layer.feature.properties.fellowship_year) {
         layer.closePopup();
         layersToRemove.push(layer);
       }
@@ -278,7 +277,6 @@ function filterMap(id) {
 **
 */
 function makeGeoJsonFeature(feature) {
-  console.log(feature);
 
   var newFeature = {
     "type": "Feature",
@@ -307,6 +305,5 @@ function makeGeoJsonFeature(feature) {
 
   return newFeature;
 }
-
 
 window.onload = init();
