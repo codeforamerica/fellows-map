@@ -26,10 +26,18 @@
   <body>
   	<nav class="nav">
       <div class="nav-inner">
-        <h1 class="title">Code for America <strong>Fellows' Map</strong></h1>
+        <h1 class="title">Code for America <strong>Fellows Map</strong></h1>
 
         <div class="actions">
-          <div class="search-input"><input class="typeahead" placeholder="Search by name..." id="search"></div>
+          <div class="action filters">
+            <button id="all" class="filter current">All</button>
+            <button id="2011" class="filter">2011</button>
+            <button id="2012" class="filter">2012</button>
+            <button id="2013" class="filter">2013</button>
+            <button id="2014" class="filter">2014</button>
+            <button id="2015" class="filter">2015</button>
+          </div>
+          <div class="action search-input"><input class="typeahead" placeholder="Search by name..." id="search"></div>
         </div>
       </div> 
     </nav>
