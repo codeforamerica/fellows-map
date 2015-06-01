@@ -9,7 +9,6 @@ var fellowsNameArray = [];
 */
 function init() {
 
-  console.log('waka');
   //initialize the map
   map = L.map('map').setView([34.30714385628804, -112.0166015625], 4);
   
@@ -73,8 +72,6 @@ var reset = {
 */
 function makeMap(data, tabletop) {
 
-  console.log(data, tabletop);
-
   // convert json to geojson spec and 
   // add as a feature to the fellowsData object
   for (var i = 0; i < data.length; i++) {
@@ -85,6 +82,8 @@ function makeMap(data, tabletop) {
       }
     })(data[i]);
   }
+
+  console.log(fellowsData);
 
   // add a new geojson object to the map from
   // the fellowsData object
