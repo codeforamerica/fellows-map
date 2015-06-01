@@ -8,6 +8,7 @@ var fellowsNameArray = [];
 **
 */
 function init() {
+
   //initialize the map
   map = L.map('map').setView([34.30714385628804, -112.0166015625], 4);
   
