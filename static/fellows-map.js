@@ -83,8 +83,6 @@ function makeMap(data, tabletop) {
     })(data[i]);
   }
 
-  console.log(fellowsData);
-
   // add a new geojson object to the map from
   // the fellowsData object
   geoJson = L.geoJson(fellowsData, {
