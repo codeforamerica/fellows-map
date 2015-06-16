@@ -107,11 +107,11 @@ function makeMap(data, tabletop) {
     fellowsNameArray.push(info.Name);
 
     var popupContent = "";
-    popupContent += "<div class='popup-image'><img src='http://www.codeforamerica.org/media/images/people/" + info.image + "'></div>";
+    popupContent += "<div class='popup-image'><img src='https://www.codeforamerica.org/media/images/people/" + info.image + "'></div>";
     popupContent += "<p class='popup-city'><strong>" + info["fellowship_city"] + "</strong>, " + info["fellowship_year"] + "</p>";
     popupContent += "<p class='popup-skill'>" + info.Skill + "</p>";
     popupContent += "<div class='social-links'><a target='_blank' class='social' href='" + info.linkedin + "'><i class='fa fa-linkedin-square'></i></a>&nbsp;&nbsp;<a target='_blank' class='social' href='" + info.twitter + "'><i class='fa fa-twitter-square'></i></a></div>";
-    popupContent += "<div class='popup-seal'><a href='" + info.city_page +"'> <img src='http://www.codeforamerica.org/media/images/governments/" + info.seal + "'></a> </div>";
+    popupContent += "<div class='popup-seal'><a href='" + info.city_page +"'> <img src='https://www.codeforamerica.org/media/images/governments/" + info.seal + "'></a> </div>";
     
     if (info && info.Name) {
       layer.bindPopup(popupContent, {
